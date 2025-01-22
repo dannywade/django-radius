@@ -10,6 +10,7 @@ from django.conf import settings
 #Handle custom user models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from users.models import Group as NetBoxGroup
 User = get_user_model()
 
 DICTIONARY = u"""
@@ -195,7 +196,7 @@ class RADIUSBackend(object):
         return user
 
     def get_user_groups(self, group_names):
-        groups = Group.objects.filter(name__in=group_names)
+        groups = NetBoxGroup.objects.filter(name__in=group_names)
         if len(groups) != len(group_names):
             local_group_names = [g.name for g in groups]
             logging.warning("RADIUS reply contains %d user groups (%s), but only %d (%s) found" % (
