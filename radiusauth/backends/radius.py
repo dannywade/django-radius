@@ -1,6 +1,7 @@
 from builtins import object
 import logging
 from io import StringIO
+import os
 
 from pyrad.packet import AccessRequest, AccessAccept, AccessReject
 from pyrad.client import Client, Timeout
@@ -54,7 +55,9 @@ ATTRIBUTE   Framed-AppleTalk-Zone   39  string
 """
 
 REALM_SEPARATOR = '@'
-
+RADIUS_SERVER = os.environ.get('RADIUS_SERVER')
+RADIUS_SECRET = os.environ.get('RADIUS_SECRET')
+RADIUS_PORT = os.environ.get('RADIUS_PORT')
 
 class RADIUSBackend(object):
     """
@@ -101,9 +104,9 @@ class RADIUSBackend(object):
         Get the RADIUS server details from the settings file.
         """
         return (
-            settings.RADIUS_SERVER,
-            int(settings.RADIUS_PORT),
-            settings.RADIUS_SECRET.encode('utf-8'),
+            RADIUS_SERVER,
+            int(RADIUS_PORT),
+            RADIUS_SECRET.encode('utf-8'),
         )
 
     def _perform_radius_auth(self, client, packet):
