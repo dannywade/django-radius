@@ -149,18 +149,22 @@ class RADIUSBackend(object):
         group_class_prefix = app_class_prefix + "group="
         role_class_prefix = app_class_prefix + "role="
 
-        for cl in reply['Class']:
-            cl = cl.decode("utf-8")
-            if cl.lower().find(group_class_prefix) == 0:
-                groups.append(cl[len(group_class_prefix):])
-            elif cl.lower().find(role_class_prefix) == 0:
-                role = cl[len(role_class_prefix):]
-                if role == "staff":
-                    is_staff = True
-                elif role == "superuser":
-                    is_superuser = True
-                else:
-                    logging.warning("RADIUS Attribute Class contains unknown role '%s'. Only roles 'staff' and 'superuser' are allowed" % cl)
+        try:
+            for cl in reply['Class']:
+                cl = cl.decode("utf-8")
+                if cl.lower().find(group_class_prefix) == 0:
+                    groups.append(cl[len(group_class_prefix):])
+                elif cl.lower().find(role_class_prefix) == 0:
+                    role = cl[len(role_class_prefix):]
+                    if role == "staff":
+                        is_staff = True
+                    elif role == "superuser":
+                        is_superuser = True
+                    else:
+                        logging.warning("RADIUS Attribute Class contains unknown role '%s'. Only roles 'staff' and 'superuser' are allowed" % cl)
+        except Exception as e:
+            logging.error(f"Exception raised while parsing 'Class' attribute for group(s) and role(s): {e}")
+            
         return groups, is_staff, is_superuser
 
     def _radius_auth(self, server, username, password):
