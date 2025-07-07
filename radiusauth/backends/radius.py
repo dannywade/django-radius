@@ -161,6 +161,9 @@ class RADIUSBackend(object):
                 logging.info(f"Could not decode 'Class' attribute using UTF-8-Sig encoding: {e}")
             logging.error(f"Class reply: {cl}") # debugging purposes
             logging.error(f"Class reply type: {type(cl)}") # debugging purposes
+            if isinstance(cl, bytes):
+                logging.error("Could not decode the 'Class' attribute properly.")
+                break
             if cl.lower().find(group_class_prefix) == 0:
                 groups.append(cl[len(group_class_prefix):])
             elif cl.lower().find(role_class_prefix) == 0:
