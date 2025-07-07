@@ -177,9 +177,9 @@ class RADIUSBackend(object):
             # except Exception as e:
             #     logging.error(f"Exception raised while parsing 'Class' attribute for group(s) and role(s): {e}")
 
-        logging.info(f"Assigned groups: {groups}")
-        logging.info(f"Staff role: {is_staff}")
-        logging.info(f"Superuser role: {is_superuser}")
+        logging.error(f"Assigned groups: {groups}")
+        logging.error(f"Staff role: {is_staff}")
+        logging.error(f"Superuser role: {is_superuser}")
         
         return groups, is_staff, is_superuser
 
