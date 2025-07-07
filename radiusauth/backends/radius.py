@@ -151,7 +151,14 @@ class RADIUSBackend(object):
 
         for cl in reply['Class']:
             try:
-                cl = cl.decode("utf-8")
+                try:
+                    cl = cl.decode("utf-8")
+                except Exception as e:
+                    logging.info(f"Could not decode 'Class' attribute using UTF-8 encoding: {e}")
+                try:
+                    cl = cl.decode("utf-8-sig")
+                except Exception as e:
+                    logging.info(f"Could not decode 'Class' attribute using UTF-8-Sig encoding: {e}")
                 if cl.lower().find(group_class_prefix) == 0:
                     groups.append(cl[len(group_class_prefix):])
                 elif cl.lower().find(role_class_prefix) == 0:
