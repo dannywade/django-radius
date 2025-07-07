@@ -157,7 +157,7 @@ class RADIUSBackend(object):
                     logging.info(f"Could not decode 'Class' attribute using UTF-8-Sig encoding: {e}")
                 if isinstance(cl, bytes):
                     # If the decoded 'Class' attribute is still a bytes obj, it wasn't decoded properly and needs dropped to avoid further errors
-                    logging.error("Could not decode the 'Class' attribute properly.")
+                    logging.error(f"Could not decode the following 'Class' attribute properly: {cl}")
                     break
                 if cl.lower().find(group_class_prefix) == 0:
                     groups.append(cl[len(group_class_prefix):])
