@@ -150,27 +150,28 @@ class RADIUSBackend(object):
         role_class_prefix = app_class_prefix + "role="
 
         for cl in reply['Class']:
+            # try:
+            # try:
+            #     cl = cl.decode("utf-8-sig")
+            # except Exception as e:
+            #     logging.info(f"Could not decode 'Class' attribute using UTF-8 encoding: {e}")
             try:
-                try:
-                    cl = cl.decode("utf-8")
-                except Exception as e:
-                    logging.info(f"Could not decode 'Class' attribute using UTF-8 encoding: {e}")
-                try:
-                    cl = cl.decode("utf-8-sig")
-                except Exception as e:
-                    logging.info(f"Could not decode 'Class' attribute using UTF-8-Sig encoding: {e}")
-                if cl.lower().find(group_class_prefix) == 0:
-                    groups.append(cl[len(group_class_prefix):])
-                elif cl.lower().find(role_class_prefix) == 0:
-                    role = cl[len(role_class_prefix):]
-                    if role == "staff":
-                        is_staff = True
-                    elif role == "superuser":
-                        is_superuser = True
-                    else:
-                        logging.warning("RADIUS Attribute Class contains unknown role '%s'. Only roles 'staff' and 'superuser' are allowed" % cl)
+                cl = cl.decode("utf-8-sig")
             except Exception as e:
-                logging.error(f"Exception raised while parsing 'Class' attribute for group(s) and role(s): {e}")
+                logging.info(f"Could not decode 'Class' attribute using UTF-8-Sig encoding: {e}")
+            logging.error(f"Class reply: {cl}") # debugging purposes
+            if cl.lower().find(group_class_prefix) == 0:
+                groups.append(cl[len(group_class_prefix):])
+            elif cl.lower().find(role_class_prefix) == 0:
+                role = cl[len(role_class_prefix):]
+                if role == "staff":
+                    is_staff = True
+                elif role == "superuser":
+                    is_superuser = True
+                else:
+                    logging.warning("RADIUS Attribute Class contains unknown role '%s'. Only roles 'staff' and 'superuser' are allowed" % cl)
+            # except Exception as e:
+            #     logging.error(f"Exception raised while parsing 'Class' attribute for group(s) and role(s): {e}")
 
         logging.info(f"Assigned groups: {groups}")
         logging.info(f"Staff role: {is_staff}")
